@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  dvwa:
+    image: 0risque/dvwa
+    build: .
+    ports: 
+      - "80:80"
+      - "3306:3306"
+    # environment:
+    # - DVWA_DB_SERVER=127.0.0.1

@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: 
+      - master
+env:
+  -DOCKER_CLIENT_TIMEOUT: 360
+  -COMPOSE_HTTP_TIMEOUT: 360
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+   
+    - name: Build dvwa
+      run: |
+        docker login -u 0risque -p ${{ secrets.DOCKERHUB_TOKEN }}
+        docker-compose build dvwa 
+        docker-compose push dvwa
+
+    
+  
