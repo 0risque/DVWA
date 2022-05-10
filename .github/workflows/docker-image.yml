@@ -4,24 +4,37 @@ on:
   push:
     branches: 
       - master
-env:
-  -DOCKER_CLIENT_TIMEOUT: 360
-  -COMPOSE_HTTP_TIMEOUT: 360
+# env:
+#   -DOCKER_CLIENT_TIMEOUT: 360
+#   -COMPOSE_HTTP_TIMEOUT: 360
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v1
+    - name: checkout
+      uses: actions/checkout@v2
    
-    - name: Build dvwa
-      run: |
-        docker login -u 0risque -p ${{ secrets.DOCKERHUB_TOKEN }}
-        docker-compose build dvwa 
-        docker-compose push dvwa
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: 0risque
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: build & push dvwa
+      uses: docker/build-push-action@v3
+      with:
+          context: .
+          push: true
+          tags: 0risque/dvwa:latest
+    
+    - name: build & push dvwa-nodb
+      uses: docker/build-push-action@v3
+      with:
+          context: .
+          target: dvwa-nodb
+          push: true
+          tags: 0risque/dvwa-nodb:latest
 
     
   
